@@ -45,5 +45,12 @@ namespace RDSRemocon.ViewModels
             var matches = regex.Matches(text);
             return matches[0].Groups[1].Value;
         }
+
+        private void startDBInstance(string instanceName) {
+            string commandText = @"/c aws rds start-db-instance --db-instance-identifier ";
+            process.StartInfo.Arguments = commandText + instanceName;
+            process.Start();
+            Output = process.StandardOutput.ReadToEnd();
+        }
     }
 }
