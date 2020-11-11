@@ -1,9 +1,23 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace RDSRemocon.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
+
+        private Process process = new Process() {
+            StartInfo = new ProcessStartInfo() {
+                FileName = System.Environment.GetEnvironmentVariable("ComSpec"),
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = false,
+                CreateNoWindow = true
+            }
+        };
+
         private string _title = "Prism Application";
         public string Title
         {
@@ -12,10 +26,56 @@ namespace RDSRemocon.ViewModels
         }
 
         public MainWindowViewModel() {
+            StartDBInstanceCommand = 
+                new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
 
+            StopDBInstanceCommand =
+                new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
+
+            UpdateDBInstanceStatusCommand =
+                new DelegateCommand(() => { Output = getDBInstanceStatus(); });
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
         private string output = "";
+
+        public DelegateCommand StartDBInstanceCommand { get; private set;}
+        public DelegateCommand StopDBInstanceCommand { get; private set;}
+        public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
+
+        /// <summary>
+        /// 現状 DBInstance は一台しか使っていないので、返却値は単一の文字列。
+        /// </summary>
+        /// <returns></returns>
+        private string getDBInstanceIdentifier (){
+            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
+            process.Start();
+
+            string text = process.StandardOutput.ReadToEnd();
+
+            var regex = new Regex("\"DBInstanceIdentifier\": \"(.*)\"", RegexOptions.IgnoreCase);
+            var matches = regex.Matches(text);
+            return matches[0].Groups[1].Value;
+        }
+
+        private void startDBInstance(string instanceName) {
+            string commandText = @"/c aws rds start-db-instance --db-instance-identifier ";
+            process.StartInfo.Arguments = commandText + instanceName;
+            process.Start();
+            Output = process.StandardOutput.ReadToEnd();
+        }
+
+        private void stopDBInstance(string instanceName) {
+            string commandText = @"/c aws rds stop-db-instance --db-instance-identifier ";
+            process.StartInfo.Arguments = commandText + instanceName;
+            process.Start();
+            Output = process.StandardOutput.ReadToEnd();
+        }
+
+        private string getDBInstanceStatus() {
+            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
+            process.Start();
+            return process.StandardOutput.ReadToEnd();
+        }
     }
 }
