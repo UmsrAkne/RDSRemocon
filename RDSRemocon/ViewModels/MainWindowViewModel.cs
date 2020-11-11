@@ -52,5 +52,12 @@ namespace RDSRemocon.ViewModels
             process.Start();
             Output = process.StandardOutput.ReadToEnd();
         }
+
+        private void stopDBInstance(string instanceName) {
+            string commandText = @"/c aws rds stop-db-instance --db-instance-identifier ";
+            process.StartInfo.Arguments = commandText + instanceName;
+            process.Start();
+            Output = process.StandardOutput.ReadToEnd();
+        }
     }
 }
