@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -25,11 +26,22 @@ namespace RDSRemocon.ViewModels
         }
 
         public MainWindowViewModel() {
+            StartDBInstanceCommand = 
+                new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
 
+            StopDBInstanceCommand =
+                new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
+
+            UpdateDBInstanceStatusCommand =
+                new DelegateCommand(() => { Output = getDBInstanceStatus(); });
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
         private string output = "";
+
+        public DelegateCommand StartDBInstanceCommand { get; private set;}
+        public DelegateCommand StopDBInstanceCommand { get; private set;}
+        public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
 
         /// <summary>
         /// 現状 DBInstance は一台しか使っていないので、返却値は単一の文字列。
@@ -58,6 +70,12 @@ namespace RDSRemocon.ViewModels
             process.StartInfo.Arguments = commandText + instanceName;
             process.Start();
             Output = process.StandardOutput.ReadToEnd();
+        }
+
+        private string getDBInstanceStatus() {
+            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
+            process.Start();
+            return process.StandardOutput.ReadToEnd();
         }
     }
 }
