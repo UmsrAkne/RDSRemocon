@@ -1,7 +1,9 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace RDSRemocon.ViewModels
 {
@@ -25,6 +27,12 @@ namespace RDSRemocon.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        private string state = "";
+        public string State {
+            get => state;
+            private set => SetProperty(ref state, value);
+        }
+
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
                 new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
@@ -33,11 +41,20 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
 
             UpdateDBInstanceStatusCommand =
-                new DelegateCommand(() => { Output = getDBInstanceStatus(); });
+                new DelegateCommand(() => {
+                    Output = getDBInstanceStatus();
+                    State = extractDBInstanceState(Output);
+                });
+
+            timer.Interval = new TimeSpan(0, 15, 0);
+            timer.Tick += (sender, e) => UpdateDBInstanceStatusCommand.Execute();
+            timer.Start();
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
         private string output = "";
+
+        private DispatcherTimer timer = new DispatcherTimer();
 
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
@@ -76,6 +93,15 @@ namespace RDSRemocon.ViewModels
             process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
             process.Start();
             return process.StandardOutput.ReadToEnd();
+        }
+
+        /// <summary>
+        /// getDBInstanceStatus の戻り値から DBInstance の現在の状態を表す文字列のみを抽出します
+        /// </summary>
+        /// <returns></returns>
+        private string extractDBInstanceState(string text) {
+            var regex = new Regex("\"DBInstanceStatus\": \"(.*)\"", RegexOptions.IgnoreCase);
+            return regex.Matches(text)[0].Groups[1].Value;
         }
     }
 }

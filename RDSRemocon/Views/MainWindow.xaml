@@ -136,7 +136,15 @@
 
         <StatusBar Grid.Row="2"
                    >
-            <TextBlock Text="ステータスバー"/>
+            <TextBlock Text="Status"/>
+
+            <TextBlock Text=":"
+                       Margin="5,0"
+                       />
+
+            <TextBlock Text="{Binding State}">
+            </TextBlock>
+
         </StatusBar>
 
     </Grid>
