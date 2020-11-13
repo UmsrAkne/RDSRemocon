@@ -33,6 +33,12 @@ namespace RDSRemocon.ViewModels
             private set => SetProperty(ref state, value);
         }
 
+        private DateTime lastUpdateDateTime = new DateTime();
+        public DateTime LastUpdateDateTime {
+            get => lastUpdateDateTime;
+            set => SetProperty(ref lastUpdateDateTime, value);
+        }
+
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
                 new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
@@ -44,6 +50,7 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => {
                     Output = getDBInstanceStatus();
                     State = extractDBInstanceState(Output);
+                    LastUpdateDateTime = DateTime.Now;
                 });
 
             timer.Interval = new TimeSpan(0, 15, 0);

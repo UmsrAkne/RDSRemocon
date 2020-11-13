@@ -175,6 +175,12 @@
                        Margin="5,0"
                        />
 
+            <TextBlock Text="lastUpdated : "
+                       />
+
+            <TextBlock Text="{Binding LastUpdateDateTime}"
+                       />
+
         </StatusBar>
 
     </Grid>
