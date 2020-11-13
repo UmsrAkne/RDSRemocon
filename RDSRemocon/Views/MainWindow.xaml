@@ -115,7 +115,7 @@
                             >
 
                     <TextBlock Text="自動更新間隔"/>
-                    <TextBox Text="15"
+                    <TextBox Text="{Binding UpdateIntervalMinuteString}"
                              Width="30"
                              TextAlignment="Center"
                              Margin="3,0,3,0"

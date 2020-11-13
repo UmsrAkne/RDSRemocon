@@ -39,6 +39,20 @@ namespace RDSRemocon.ViewModels
             set => SetProperty(ref lastUpdateDateTime, value);
         }
 
+        private string updateIntervalMinuteString = "";
+        public string UpdateIntervalMinuteString {
+            get => updateIntervalMinuteString;
+            set {
+                if (int.TryParse(value, out int num)) {
+                    SetProperty(ref updateIntervalMinuteString, value);
+                    timer.Interval = new TimeSpan(0,num,0);
+                }
+                else {
+                    SetProperty(ref updateIntervalMinuteString, updateIntervalMinuteString);
+                }
+            }
+        }
+
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
                 new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
@@ -53,7 +67,9 @@ namespace RDSRemocon.ViewModels
                     LastUpdateDateTime = DateTime.Now;
                 });
 
-            timer.Interval = new TimeSpan(0, 15, 0);
+            int updateInterval = 20;
+            UpdateIntervalMinuteString = updateInterval.ToString();
+
             timer.Tick += (sender, e) => UpdateDBInstanceStatusCommand.Execute();
             timer.Start();
         }
