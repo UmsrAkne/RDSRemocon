@@ -142,8 +142,38 @@
                        Margin="5,0"
                        />
 
-            <TextBlock Text="{Binding State}">
+            <TextBlock Text="{Binding State}"
+                       Padding="8,0"
+                       Background="Transparent"
+                       >
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+
+                            <Trigger Property="Text" Value="stopped">
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+
+                            <Trigger Property="Text" Value="available">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </Trigger>
+
+                            <Trigger Property="Text" Value="starting">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </Trigger>
+
+                            <Trigger Property="Text" Value="backing-up">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </Trigger>
+
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
             </TextBlock>
+
+            <TextBlock Text="/"
+                       Margin="5,0"
+                       />
 
         </StatusBar>
 
