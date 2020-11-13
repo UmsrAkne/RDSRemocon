@@ -1,7 +1,9 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace RDSRemocon.ViewModels
 {
@@ -25,6 +27,32 @@ namespace RDSRemocon.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        private string state = "";
+        public string State {
+            get => state;
+            private set => SetProperty(ref state, value);
+        }
+
+        private DateTime lastUpdateDateTime = new DateTime();
+        public DateTime LastUpdateDateTime {
+            get => lastUpdateDateTime;
+            set => SetProperty(ref lastUpdateDateTime, value);
+        }
+
+        private string updateIntervalMinuteString = "";
+        public string UpdateIntervalMinuteString {
+            get => updateIntervalMinuteString;
+            set {
+                if (int.TryParse(value, out int num)) {
+                    SetProperty(ref updateIntervalMinuteString, value);
+                    timer.Interval = new TimeSpan(0,num,0);
+                }
+                else {
+                    SetProperty(ref updateIntervalMinuteString, updateIntervalMinuteString);
+                }
+            }
+        }
+
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
                 new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
@@ -33,11 +61,23 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
 
             UpdateDBInstanceStatusCommand =
-                new DelegateCommand(() => { Output = getDBInstanceStatus(); });
+                new DelegateCommand(() => {
+                    Output = getDBInstanceStatus();
+                    State = extractDBInstanceState(Output);
+                    LastUpdateDateTime = DateTime.Now;
+                });
+
+            int updateInterval = 20;
+            UpdateIntervalMinuteString = updateInterval.ToString();
+
+            timer.Tick += (sender, e) => UpdateDBInstanceStatusCommand.Execute();
+            timer.Start();
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
         private string output = "";
+
+        private DispatcherTimer timer = new DispatcherTimer();
 
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
@@ -76,6 +116,15 @@ namespace RDSRemocon.ViewModels
             process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
             process.Start();
             return process.StandardOutput.ReadToEnd();
+        }
+
+        /// <summary>
+        /// getDBInstanceStatus の戻り値から DBInstance の現在の状態を表す文字列のみを抽出します
+        /// </summary>
+        /// <returns></returns>
+        private string extractDBInstanceState(string text) {
+            var regex = new Regex("\"DBInstanceStatus\": \"(.*)\"", RegexOptions.IgnoreCase);
+            return regex.Matches(text)[0].Groups[1].Value;
         }
     }
 }
