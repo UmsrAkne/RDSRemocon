@@ -12,17 +12,6 @@ namespace RDSRemocon.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-
-        private Process process = new Process() {
-            StartInfo = new ProcessStartInfo() {
-                FileName = System.Environment.GetEnvironmentVariable("ComSpec"),
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = false,
-                CreateNoWindow = true
-            }
-        };
-
         private string _title = "Prism Application";
         public string Title
         {
