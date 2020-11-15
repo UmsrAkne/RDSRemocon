@@ -10,9 +10,12 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=True}"
 
-        Title="{Binding Title}" Height="250" Width="400">
+        Title="{Binding Title}" Height="400" Width="400">
 
     <Window.Resources>
+
+        <vms:HistoryViewModel x:Key="HistoryViewModel" />
+
         <Style TargetType="Button"
                x:Key="buttonStyle"
                >
@@ -60,6 +63,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -134,7 +138,59 @@
                    Grid.Column="0"
                    />
 
-        <StatusBar Grid.Row="2"
+        <ListView ItemsSource="{Binding Logs}"
+                  Grid.Row="2">
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding ExecutionDateTime}"
+                               />
+
+                    <Border Grid.Column="1"
+                            Background="Black"
+                            Width="2"
+                            Margin="5,0"
+                            />
+
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding ExecutionCommandType}"
+                               />
+
+                    <Border Grid.Column="3"
+                            Background="Black"
+                            Width="2"
+                            Margin="5,0"
+                            />
+
+                    <TextBlock Grid.Column="4"
+                           Text="{Binding Message}"
+                           />
+
+                    </Grid>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+
+        <StatusBar Grid.Row="3"
                    >
             <TextBlock Text="Status"/>
 

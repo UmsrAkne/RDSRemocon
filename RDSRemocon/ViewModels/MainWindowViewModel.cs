@@ -1,6 +1,9 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using RDSRemocon.Models;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
@@ -9,17 +12,6 @@ namespace RDSRemocon.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-
-        private Process process = new Process() {
-            StartInfo = new ProcessStartInfo() {
-                FileName = System.Environment.GetEnvironmentVariable("ComSpec"),
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = false,
-                CreateNoWindow = true
-            }
-        };
-
         private string _title = "Prism Application";
         public string Title
         {
@@ -39,6 +31,12 @@ namespace RDSRemocon.ViewModels
             set => SetProperty(ref lastUpdateDateTime, value);
         }
 
+        private ObservableCollection<Log> logs = new ObservableCollection<Log>();
+        public ObservableCollection<Log> Logs {
+            get => logs;
+            set => SetProperty(ref logs, value);
+        }
+
         private string updateIntervalMinuteString = "";
         public string UpdateIntervalMinuteString {
             get => updateIntervalMinuteString;
@@ -55,16 +53,20 @@ namespace RDSRemocon.ViewModels
 
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
-                new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
+                new DelegateCommand(() => {
+                    cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
+                    updateDBInstanceStatus("start");
+                });
 
             StopDBInstanceCommand =
-                new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
+                new DelegateCommand(() => {
+                    cliExecuter.stopDBInstance(cliExecuter.getDBInstanceIdentifier());
+                    updateDBInstanceStatus("stop");
+                });
 
             UpdateDBInstanceStatusCommand =
                 new DelegateCommand(() => {
-                    Output = getDBInstanceStatus();
-                    State = extractDBInstanceState(Output);
-                    LastUpdateDateTime = DateTime.Now;
+                    updateDBInstanceStatus("getStatus");
                 });
 
             int updateInterval = 20;
@@ -83,40 +85,7 @@ namespace RDSRemocon.ViewModels
         public DelegateCommand StopDBInstanceCommand { get; private set;}
         public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
 
-        /// <summary>
-        /// 現状 DBInstance は一台しか使っていないので、返却値は単一の文字列。
-        /// </summary>
-        /// <returns></returns>
-        private string getDBInstanceIdentifier (){
-            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
-            process.Start();
-
-            string text = process.StandardOutput.ReadToEnd();
-
-            var regex = new Regex("\"DBInstanceIdentifier\": \"(.*)\"", RegexOptions.IgnoreCase);
-            var matches = regex.Matches(text);
-            return matches[0].Groups[1].Value;
-        }
-
-        private void startDBInstance(string instanceName) {
-            string commandText = @"/c aws rds start-db-instance --db-instance-identifier ";
-            process.StartInfo.Arguments = commandText + instanceName;
-            process.Start();
-            Output = process.StandardOutput.ReadToEnd();
-        }
-
-        private void stopDBInstance(string instanceName) {
-            string commandText = @"/c aws rds stop-db-instance --db-instance-identifier ";
-            process.StartInfo.Arguments = commandText + instanceName;
-            process.Start();
-            Output = process.StandardOutput.ReadToEnd();
-        }
-
-        private string getDBInstanceStatus() {
-            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
-            process.Start();
-            return process.StandardOutput.ReadToEnd();
-        }
+        private CLICommands cliExecuter = new CLICommands();
 
         /// <summary>
         /// getDBInstanceStatus の戻り値から DBInstance の現在の状態を表す文字列のみを抽出します
@@ -125,6 +94,13 @@ namespace RDSRemocon.ViewModels
         private string extractDBInstanceState(string text) {
             var regex = new Regex("\"DBInstanceStatus\": \"(.*)\"", RegexOptions.IgnoreCase);
             return regex.Matches(text)[0].Groups[1].Value;
+        }
+
+        private void updateDBInstanceStatus(string commandType) {
+            Output = cliExecuter.getDBInstanceStatus();
+            State = extractDBInstanceState(Output);
+            Logs.Insert(0, new Log(commandType, State, DateTime.Now));
+            LastUpdateDateTime = DateTime.Now;
         }
     }
 }
