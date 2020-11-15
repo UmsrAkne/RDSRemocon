@@ -10,9 +10,12 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=True}"
 
-        Title="{Binding Title}" Height="250" Width="400">
+        Title="{Binding Title}" Height="400" Width="400">
 
     <Window.Resources>
+
+        <vms:HistoryViewModel x:Key="HistoryViewModel" />
+
         <Style TargetType="Button"
                x:Key="buttonStyle"
                >
@@ -60,6 +63,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -134,7 +138,11 @@
                    Grid.Column="0"
                    />
 
-        <StatusBar Grid.Row="2"
+        <ListView Grid.Row="2">
+            
+        </ListView>
+
+        <StatusBar Grid.Row="3"
                    >
             <TextBlock Text="Status"/>
 
