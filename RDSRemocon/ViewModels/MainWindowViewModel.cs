@@ -2,6 +2,8 @@
 using Prism.Mvvm;
 using RDSRemocon.Models;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
@@ -40,6 +42,12 @@ namespace RDSRemocon.ViewModels
             set => SetProperty(ref lastUpdateDateTime, value);
         }
 
+        private ObservableCollection<Log> logs = new ObservableCollection<Log>();
+        public ObservableCollection<Log> Logs {
+            get => logs;
+            set => SetProperty(ref logs, value);
+        }
+
         private string updateIntervalMinuteString = "";
         public string UpdateIntervalMinuteString {
             get => updateIntervalMinuteString;
@@ -69,6 +77,7 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => {
                     Output = cliExecuter.getDBInstanceStatus();
                     State = extractDBInstanceState(Output);
+                    Logs.Add(new Log("getStatus" ,State, DateTime.Now));
                     LastUpdateDateTime = DateTime.Now;
                 });
 

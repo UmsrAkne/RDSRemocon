@@ -138,8 +138,7 @@
                    Grid.Column="0"
                    />
 
-        <ListView DataContext="{StaticResource HistoryViewModel}"
-                  ItemsSource="{Binding Logs}"
+        <ListView ItemsSource="{Binding Logs}"
                   Grid.Row="2">
 
             <ListView.ItemContainerStyle>
@@ -155,7 +154,9 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0"
@@ -169,6 +170,16 @@
                             />
 
                     <TextBlock Grid.Column="2"
+                               Text="{Binding ExecutionCommandType}"
+                               />
+
+                    <Border Grid.Column="3"
+                            Background="Black"
+                            Width="2"
+                            Margin="5,0"
+                            />
+
+                    <TextBlock Grid.Column="4"
                            Text="{Binding Message}"
                            />
 
