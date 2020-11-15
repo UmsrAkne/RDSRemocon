@@ -138,8 +138,45 @@
                    Grid.Column="0"
                    />
 
-        <ListView Grid.Row="2">
-            
+        <ListView DataContext="{StaticResource HistoryViewModel}"
+                  ItemsSource="{Binding Logs}"
+                  Grid.Row="2">
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding ExecutionDateTime}"
+                               />
+
+                    <Border Grid.Column="1"
+                            Background="Black"
+                            Width="2"
+                            Margin="5,0"
+                            />
+
+                    <TextBlock Grid.Column="2"
+                           Text="{Binding Message}"
+                           />
+
+                    </Grid>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
         </ListView>
 
         <StatusBar Grid.Row="3"
