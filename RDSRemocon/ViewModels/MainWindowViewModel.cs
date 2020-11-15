@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using RDSRemocon.Models;
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -55,14 +56,18 @@ namespace RDSRemocon.ViewModels
 
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
-                new DelegateCommand(() => { startDBInstance(getDBInstanceIdentifier()); });
+                new DelegateCommand(() => {
+                    cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
+                });
 
             StopDBInstanceCommand =
-                new DelegateCommand(() => { stopDBInstance(getDBInstanceIdentifier()); });
+                new DelegateCommand(() => {
+                    cliExecuter.stopDBInstance(cliExecuter.getDBInstanceIdentifier());
+                });
 
             UpdateDBInstanceStatusCommand =
                 new DelegateCommand(() => {
-                    Output = getDBInstanceStatus();
+                    Output = cliExecuter.getDBInstanceStatus();
                     State = extractDBInstanceState(Output);
                     LastUpdateDateTime = DateTime.Now;
                 });
@@ -83,40 +88,7 @@ namespace RDSRemocon.ViewModels
         public DelegateCommand StopDBInstanceCommand { get; private set;}
         public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
 
-        /// <summary>
-        /// 現状 DBInstance は一台しか使っていないので、返却値は単一の文字列。
-        /// </summary>
-        /// <returns></returns>
-        private string getDBInstanceIdentifier (){
-            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
-            process.Start();
-
-            string text = process.StandardOutput.ReadToEnd();
-
-            var regex = new Regex("\"DBInstanceIdentifier\": \"(.*)\"", RegexOptions.IgnoreCase);
-            var matches = regex.Matches(text);
-            return matches[0].Groups[1].Value;
-        }
-
-        private void startDBInstance(string instanceName) {
-            string commandText = @"/c aws rds start-db-instance --db-instance-identifier ";
-            process.StartInfo.Arguments = commandText + instanceName;
-            process.Start();
-            Output = process.StandardOutput.ReadToEnd();
-        }
-
-        private void stopDBInstance(string instanceName) {
-            string commandText = @"/c aws rds stop-db-instance --db-instance-identifier ";
-            process.StartInfo.Arguments = commandText + instanceName;
-            process.Start();
-            Output = process.StandardOutput.ReadToEnd();
-        }
-
-        private string getDBInstanceStatus() {
-            process.StartInfo.Arguments = @"/c aws rds describe-db-instances";
-            process.Start();
-            return process.StandardOutput.ReadToEnd();
-        }
+        private CLICommands cliExecuter = new CLICommands();
 
         /// <summary>
         /// getDBInstanceStatus の戻り値から DBInstance の現在の状態を表す文字列のみを抽出します
