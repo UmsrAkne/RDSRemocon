@@ -55,19 +55,18 @@ namespace RDSRemocon.ViewModels
             StartDBInstanceCommand = 
                 new DelegateCommand(() => {
                     cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
+                    updateDBInstanceStatus("start");
                 });
 
             StopDBInstanceCommand =
                 new DelegateCommand(() => {
                     cliExecuter.stopDBInstance(cliExecuter.getDBInstanceIdentifier());
+                    updateDBInstanceStatus("stop");
                 });
 
             UpdateDBInstanceStatusCommand =
                 new DelegateCommand(() => {
-                    Output = cliExecuter.getDBInstanceStatus();
-                    State = extractDBInstanceState(Output);
-                    Logs.Add(new Log("getStatus" ,State, DateTime.Now));
-                    LastUpdateDateTime = DateTime.Now;
+                    updateDBInstanceStatus("getStatus");
                 });
 
             int updateInterval = 20;
@@ -95,6 +94,13 @@ namespace RDSRemocon.ViewModels
         private string extractDBInstanceState(string text) {
             var regex = new Regex("\"DBInstanceStatus\": \"(.*)\"", RegexOptions.IgnoreCase);
             return regex.Matches(text)[0].Groups[1].Value;
+        }
+
+        private void updateDBInstanceStatus(string commandType) {
+            Output = cliExecuter.getDBInstanceStatus();
+            State = extractDBInstanceState(Output);
+            Logs.Insert(0, new Log(commandType, State, DateTime.Now));
+            LastUpdateDateTime = DateTime.Now;
         }
     }
 }
