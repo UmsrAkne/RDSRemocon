@@ -200,7 +200,6 @@
 
             <TextBlock Text="{Binding State}"
                        Padding="8,0"
-                       Background="Transparent"
                        >
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
