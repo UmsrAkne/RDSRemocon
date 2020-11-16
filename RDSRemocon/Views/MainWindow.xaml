@@ -14,8 +14,6 @@
 
     <Window.Resources>
 
-        <vms:HistoryViewModel x:Key="HistoryViewModel" />
-
         <Style TargetType="Button"
                x:Key="buttonStyle"
                >
@@ -200,7 +198,6 @@
 
             <TextBlock Text="{Binding State}"
                        Padding="8,0"
-                       Background="Transparent"
                        >
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
