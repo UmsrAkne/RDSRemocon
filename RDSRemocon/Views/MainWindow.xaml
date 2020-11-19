@@ -152,7 +152,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="90"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
@@ -169,6 +169,7 @@
 
                     <TextBlock Grid.Column="2"
                                Text="{Binding ExecutionCommandType}"
+                               TextAlignment="Center"
                                />
 
                     <Border Grid.Column="3"
