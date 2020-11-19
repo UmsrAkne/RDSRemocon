@@ -69,6 +69,8 @@ namespace RDSRemocon.ViewModels
                     updateDBInstanceStatus("getStatus");
                 });
 
+            updateDBInstanceStatus("getStatus(init)");
+
             int updateInterval = 20;
             UpdateIntervalMinuteString = updateInterval.ToString();
 
