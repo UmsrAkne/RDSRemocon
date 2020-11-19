@@ -49,6 +49,15 @@ namespace RDSRemocon.ViewModels
             }
         }
 
+        public string IconImagePath {
+            get {
+                return (State == "available" || State == "starting") 
+                    ? "/Images/running.png" 
+                    : "/Images/stopped.png" ;
+
+            }
+        }
+
         public MainWindowViewModel() {
             StartDBInstanceCommand = 
                 new DelegateCommand(() => {
@@ -99,6 +108,8 @@ namespace RDSRemocon.ViewModels
         private void updateDBInstanceStatus(string commandType) {
             Output = cliExecuter.getDBInstanceStatus();
             State = extractDBInstanceState(Output);
+            RaisePropertyChanged(nameof(IconImagePath));
+            RaisePropertyChanged(nameof(Title));
             Logs.Insert(0, new Log(commandType, State, DateTime.Now));
             LastUpdateDateTime = DateTime.Now;
         }
