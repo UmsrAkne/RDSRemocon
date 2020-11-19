@@ -10,7 +10,9 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vms:MainWindowViewModel, IsDesignTimeCreatable=True}"
 
-        Title="{Binding Title}" Height="400" Width="400">
+        Title="{Binding Title}" Height="400" Width="400"
+        Icon="{Binding IconImagePath}"
+        >
 
     <Window.Resources>
 

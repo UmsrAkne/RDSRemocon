@@ -12,11 +12,9 @@ namespace RDSRemocon.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism Application";
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get { return $"DB status : {State}"; }
         }
 
         private string state = "";
@@ -48,6 +46,15 @@ namespace RDSRemocon.ViewModels
                 else {
                     SetProperty(ref updateIntervalMinuteString, updateIntervalMinuteString);
                 }
+            }
+        }
+
+        public string IconImagePath {
+            get {
+                return (State == "available" || State == "starting") 
+                    ? "/Images/running.png" 
+                    : "/Images/stopped.png" ;
+
             }
         }
 
@@ -101,6 +108,8 @@ namespace RDSRemocon.ViewModels
         private void updateDBInstanceStatus(string commandType) {
             Output = cliExecuter.getDBInstanceStatus();
             State = extractDBInstanceState(Output);
+            RaisePropertyChanged(nameof(IconImagePath));
+            RaisePropertyChanged(nameof(Title));
             Logs.Insert(0, new Log(commandType, State, DateTime.Now));
             LastUpdateDateTime = DateTime.Now;
         }
