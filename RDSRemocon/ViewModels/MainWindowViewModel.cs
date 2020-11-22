@@ -78,7 +78,7 @@ namespace RDSRemocon.ViewModels
 
             updateDBInstanceStatus("getStatus(init)");
 
-            int updateInterval = 20;
+            int updateInterval = 30;
             UpdateIntervalMinuteString = updateInterval.ToString();
 
             timer.Tick += (sender, e) => UpdateDBInstanceStatusCommand.Execute();
