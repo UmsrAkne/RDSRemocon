@@ -160,7 +160,7 @@
                         </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0"
-                               Text="{Binding ExecutionDateTime}"
+                               Text="{Binding ExecutionDateTimeShortString}"
                                />
 
                     <Border Grid.Column="1"

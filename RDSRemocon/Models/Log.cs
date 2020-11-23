@@ -11,6 +11,7 @@ namespace RDSRemocon.Models {
         private string executionCommandType;
         private string message;
         private DateTime executionDateTime;
+        private string executionDateTimeShortString;
 
         public Log(string executionCommandType ,string message, DateTime executionDateTime) {
             ExecutionCommandType = executionCommandType;
@@ -27,7 +28,16 @@ namespace RDSRemocon.Models {
         }
 
         public DateTime ExecutionDateTime {
-            get => executionDateTime; set => SetProperty(ref executionDateTime, value);
+            get => executionDateTime;
+            set {
+                SetProperty(ref executionDateTime, value);
+                ExecutionDateTimeShortString = executionDateTime.ToString("MM/dd/yy HH:mm:ss");
+            }
+        }
+
+        public string ExecutionDateTimeShortString {
+            get => executionDateTimeShortString;
+            private set => SetProperty(ref executionDateTimeShortString, value);
         }
 
     }
