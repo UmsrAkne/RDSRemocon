@@ -132,11 +132,15 @@
 
         </StackPanel>
 
-        <TextBlock x:Name="outputTextBlock"
-                   Text="{Binding Output}"
-                   Grid.Row="1"
-                   Grid.Column="0"
-                   />
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="0"
+                      >
+
+            <TextBlock x:Name="outputTextBlock"
+                       Text="{Binding Output}"
+                       />
+
+        </ScrollViewer>
 
         <ListView ItemsSource="{Binding Logs}"
                   Grid.Row="2">
