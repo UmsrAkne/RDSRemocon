@@ -16,6 +16,14 @@
 
     <Window.Resources>
 
+        <SolidColorBrush Color="DimGray" x:Key="basicBackgroundColor"/>
+        <SolidColorBrush Color="LightSlateGray" x:Key="basicLigthBackgroundColor"/>
+        <SolidColorBrush Color="White" x:Key="basicFontColor"/>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource basicFontColor}"/>
+        </Style>
+
         <Style TargetType="Button"
                x:Key="buttonStyle"
                >
@@ -28,7 +36,7 @@
                         <Border x:Name="border"
                                 BorderThickness="1"
                                 BorderBrush="Gray"
-                                Background="WhiteSmoke"
+                                Background="Silver"
                                 CornerRadius="5"
                                 >
                             <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -59,7 +67,7 @@
         </Style>
     </Window.Resources>
     
-    <Grid>
+    <Grid Background="{StaticResource basicBackgroundColor}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -143,7 +151,10 @@
         </ScrollViewer>
 
         <ListView ItemsSource="{Binding Logs}"
-                  Grid.Row="2">
+                  Grid.Row="2"
+                  Background="{StaticResource basicBackgroundColor}"
+                  BorderThickness="0,1"
+                  >
 
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -165,6 +176,7 @@
 
                     <TextBlock Grid.Column="0"
                                Text="{Binding ExecutionDateTimeShortString}"
+                               Foreground="{StaticResource basicFontColor}"
                                />
 
                     <Border Grid.Column="1"
@@ -175,6 +187,7 @@
 
                     <TextBlock Grid.Column="2"
                                Text="{Binding ExecutionCommandType}"
+                               Foreground="{StaticResource basicFontColor}"
                                TextAlignment="Center"
                                />
 
@@ -186,6 +199,7 @@
 
                     <TextBlock Grid.Column="4"
                            Text="{Binding Message}"
+                           Foreground="{StaticResource basicFontColor}"
                            />
 
                     </Grid>
@@ -196,6 +210,7 @@
         </ListView>
 
         <StatusBar Grid.Row="3"
+                   Background="{StaticResource basicLigthBackgroundColor}"
                    >
             <TextBlock Text="Status"/>
 
