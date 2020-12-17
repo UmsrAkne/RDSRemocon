@@ -62,6 +62,7 @@ namespace RDSRemocon.ViewModels
             StartDBInstanceCommand = 
                 new DelegateCommand(() => {
                     cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
+                    additionCheckTimer.Start();
                     updateDBInstanceStatus("start");
                 });
 
@@ -83,12 +84,19 @@ namespace RDSRemocon.ViewModels
 
             timer.Tick += (sender, e) => UpdateDBInstanceStatusCommand.Execute();
             timer.Start();
+
+            additionCheckTimer.Interval = new TimeSpan(0, 5, 0);
+            additionCheckTimer.Tick += (sendre, e) => {
+                additionCheckTimer.Stop();
+                updateDBInstanceStatus("getStatus(auto)");
+            };
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
         private string output = "";
 
         private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer additionCheckTimer = new DispatcherTimer();
 
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
