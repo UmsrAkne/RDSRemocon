@@ -20,6 +20,11 @@
         <SolidColorBrush Color="LightSlateGray" x:Key="basicLigthBackgroundColor"/>
         <SolidColorBrush Color="White" x:Key="basicFontColor"/>
 
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="{StaticResource basicLigthBackgroundColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource basicLigthBackgroundColor}"/>
+        </Style>
+
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource basicFontColor}"/>
         </Style>
