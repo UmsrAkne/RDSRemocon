@@ -87,6 +87,8 @@ namespace RDSRemocon.ViewModels
 
             additionCheckTimer.Interval = new TimeSpan(0, 5, 0);
             additionCheckTimer.Tick += (sendre, e) => {
+                var soundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Notify Messaging.wav");
+                soundPlayer.Play();
                 additionCheckTimer.Stop();
                 updateDBInstanceStatus("getStatus(auto)");
             };
