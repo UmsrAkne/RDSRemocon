@@ -51,7 +51,7 @@ namespace RDSRemocon.ViewModels
 
         public string IconImagePath {
             get {
-                return (State == "available" || State == "starting" || State == "backing-up") 
+                return (State == "available" || State == "starting" || State == "backing-up" || State == "configuring-enhanced-monitoring") 
                     ? "/Images/running.png" 
                     : "/Images/stopped.png" ;
 
