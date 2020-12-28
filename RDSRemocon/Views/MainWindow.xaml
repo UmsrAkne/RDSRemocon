@@ -64,6 +64,13 @@
                                         />
                             </Trigger>
 
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="WhiteSmoke"
+                                        />
+                            </Trigger>
+
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
 
