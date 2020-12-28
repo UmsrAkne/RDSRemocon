@@ -72,7 +72,9 @@
         </Style>
     </Window.Resources>
     
-    <Grid Background="{StaticResource basicBackgroundColor}">
+    <Grid Background="{StaticResource basicBackgroundColor}"
+          FocusManager.FocusedElement="{Binding ElementName=StartButton}"
+          >
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -93,6 +95,7 @@
             <Button Content="起動"
                     Style="{StaticResource buttonStyle}"
                     Command="{Binding StartDBInstanceCommand}"
+                    x:Name="StartButton"
                     />
             <Grid>
                 <Grid.ColumnDefinitions>
