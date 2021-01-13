@@ -92,6 +92,20 @@ namespace RDSRemocon.ViewModels
                 additionCheckTimer.Stop();
                 updateDBInstanceStatus("getStatus(auto)");
             };
+
+
+            if(State != "available") {
+            // available は稼働状態なので、自動起動の必要はない。
+                autoStartTimer.Interval = new TimeSpan(0, 5, 0);
+                autoStartTimer.Tick += (sender, e) => {
+                    var soundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Notify Messaging.wav");
+                    soundPlayer.Play();
+                    StartDBInstanceCommand.Execute();
+                    autoStartTimer.Stop();
+                };
+
+                autoStartTimer.Start();
+            }
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
@@ -99,6 +113,7 @@ namespace RDSRemocon.ViewModels
 
         private DispatcherTimer timer = new DispatcherTimer();
         private DispatcherTimer additionCheckTimer = new DispatcherTimer();
+        private DispatcherTimer autoStartTimer = new DispatcherTimer();
 
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
