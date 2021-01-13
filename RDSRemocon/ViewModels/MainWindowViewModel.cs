@@ -23,6 +23,12 @@ namespace RDSRemocon.ViewModels
             private set => SetProperty(ref state, value);
         }
 
+        private string autoStartStopButtonText = "自動起動 ON";
+        public string AutoStartStopButtonText {
+            get => autoStartStopButtonText;
+            set => SetProperty(ref autoStartStopButtonText, value);
+        }
+
         private DateTime lastUpdateDateTime = new DateTime();
         public DateTime LastUpdateDateTime {
             get => lastUpdateDateTime;
@@ -101,10 +107,13 @@ namespace RDSRemocon.ViewModels
                     var soundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Notify Messaging.wav");
                     soundPlayer.Play();
                     StartDBInstanceCommand.Execute();
-                    autoStartTimer.Stop();
+                    DisableAutoStartCommand.Execute();
                 };
 
                 autoStartTimer.Start();
+            }
+            else {
+                DisableAutoStartCommand.Execute();
             }
         }
 
@@ -118,6 +127,15 @@ namespace RDSRemocon.ViewModels
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
         public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
+
+        private DelegateCommand disableAutoStartCommand;
+        public DelegateCommand DisableAutoStartCommand {
+            get => disableAutoStartCommand ?? (disableAutoStartCommand = new DelegateCommand(() => {
+                autoStartTimer.Stop();
+                AutoStartStopButtonText = "自動起動 OFF";
+            }));
+        }
+
 
         private CLICommands cliExecuter = new CLICommands();
 

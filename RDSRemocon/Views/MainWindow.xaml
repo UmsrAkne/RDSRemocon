@@ -99,11 +99,30 @@
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
                     >
-            <Button Content="起動"
-                    Style="{StaticResource buttonStyle}"
-                    Command="{Binding StartDBInstanceCommand}"
-                    x:Name="StartButton"
-                    />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="起動"
+                        Style="{StaticResource buttonStyle}"
+                        Command="{Binding StartDBInstanceCommand}"
+                        x:Name="StartButton"
+                        Grid.Column="0"
+                        />
+
+                <Button Content="{Binding AutoStartStopButtonText}"
+                        Style="{StaticResource buttonStyle}"
+                        x:Name="AutoStartButton"
+                        Grid.Column="1"
+                        Margin="3,4"
+                        Command="{Binding DisableAutoStartCommand}"
+                        />
+
+            </Grid>
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
