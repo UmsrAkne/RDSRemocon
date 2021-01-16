@@ -69,6 +69,7 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => {
                     cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
                     additionCheckTimer.Start();
+                    DisableAutoStartCommand.Execute();
                     updateDBInstanceStatus("start");
                 });
 
@@ -107,7 +108,6 @@ namespace RDSRemocon.ViewModels
                     var soundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Notify Messaging.wav");
                     soundPlayer.Play();
                     StartDBInstanceCommand.Execute();
-                    DisableAutoStartCommand.Execute();
                 };
 
                 autoStartTimer.Start();
