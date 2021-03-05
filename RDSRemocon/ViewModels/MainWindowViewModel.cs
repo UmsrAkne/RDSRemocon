@@ -55,6 +55,22 @@ namespace RDSRemocon.ViewModels
             }
         }
 
+        public int AutoStartMinutesCounter {
+            get => autoStartMinutesCounter;
+            set {
+                SetProperty(ref autoStartMinutesCounter, value);
+                RaisePropertyChanged(nameof(AutoStartAnnouncement));
+            }
+        }
+
+        private int autoStartMinutesCounter = 0;
+
+        public string AutoStartAnnouncement {
+            get => AutoStartMinutesCounter > 0 ? $"{autoStartMinutesCounter}分後に起動します。" : "";
+        }
+
+        public string autoStartAnnouncement = "";
+
         public string IconImagePath {
             get {
                 return (State == "available" || State == "starting" || State == "backing-up" || State == "configuring-enhanced-monitoring") 
@@ -100,21 +116,27 @@ namespace RDSRemocon.ViewModels
                 updateDBInstanceStatus("getStatus(auto)");
             };
 
+            autoStartTimer.Interval = new TimeSpan(0, 1, 0);
+            autoStartTimer.Tick += (sender, e) => {
+                if (autoStartMinutesCounter < 0) {
+                    return;
+                }
+                else {
+                    AutoStartMinutesCounter--;
+                }
 
-            if(State != "available") {
-            // available は稼働状態なので、自動起動の必要はない。
-                autoStartTimer.Interval = new TimeSpan(0, 5, 0);
-                autoStartTimer.Tick += (sender, e) => {
+                if (autoStartMinutesCounter == 0) {
                     var soundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\Windows Notify Messaging.wav");
                     soundPlayer.Play();
                     StartDBInstanceCommand.Execute();
-                };
+                }
+            };
 
-                autoStartTimer.Start();
+            if(State != "available") {
+                autoStartMinutesCounter = 5;
             }
-            else {
-                DisableAutoStartCommand.Execute();
-            }
+
+            autoStartTimer.Start();
         }
 
         public string Output { get => output; set => SetProperty(ref output, value); }
@@ -136,6 +158,16 @@ namespace RDSRemocon.ViewModels
             }));
         }
 
+
+        public DelegateCommand<Object> SetAutoStartCommand {
+            #region
+            get => setAutoStartCommand ?? (setAutoStartCommand = new DelegateCommand<Object>((Object numberString) => {
+                AutoStartMinutesCounter = int.Parse((String)numberString);
+                StopDBInstanceCommand.Execute();
+            }));
+        }
+        private DelegateCommand<Object> setAutoStartCommand;
+        #endregion
 
         private CLICommands cliExecuter = new CLICommands();
 

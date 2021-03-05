@@ -137,6 +137,8 @@
 
                 <Button
                     Grid.Column="0"
+                    Command="{Binding SetAutoStartCommand}"
+                    CommandParameter="{Binding ElementName=TimeSelectComboBox, Path=SelectedItem.Tag}"
                     Content="停止・指定時間後再起動"
                     Style="{StaticResource buttonStyle}" />
 
@@ -145,7 +147,7 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
-                    <ComboBox>
+                    <ComboBox Name="TimeSelectComboBox">
                         <ComboBoxItem Content="30 分後" Tag="25" />
 
                         <ComboBoxItem
@@ -165,6 +167,13 @@
 
                 </StackPanel>
             </Grid>
+
+            <StackPanel Orientation="Horizontal">
+
+                <TextBlock Margin="5,0" Text="自動再起動タイマー  : " />
+                <TextBlock Foreground="OrangeRed" Text="{Binding AutoStartAnnouncement}" />
+
+            </StackPanel>
 
             <Grid>
                 <Grid.ColumnDefinitions>
