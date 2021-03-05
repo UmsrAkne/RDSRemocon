@@ -136,6 +136,43 @@
                 </Grid.ColumnDefinitions>
 
                 <Button
+                    Grid.Column="0"
+                    Content="停止・指定時間後再起動"
+                    Style="{StaticResource buttonStyle}" />
+
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <ComboBox>
+                        <ComboBoxItem Content="30 分後" Tag="25" />
+
+                        <ComboBoxItem
+                            Content="60 分後"
+                            IsSelected="True"
+                            Tag="55" />
+
+                        <ComboBoxItem Content="90 分後" Tag="85" />
+                        <ComboBoxItem Content="120 分後" Tag="115" />
+                        <ComboBoxItem Content="180 分後" Tag="175" />
+                    </ComboBox>
+
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="に再起動" />
+
+                </StackPanel>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button
                     Command="{Binding UpdateDBInstanceStatusCommand}"
                     Content="状態取得"
                     Style="{StaticResource buttonStyle}" />
