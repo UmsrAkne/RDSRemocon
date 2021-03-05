@@ -87,7 +87,6 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <Button
@@ -95,14 +94,6 @@
                     Grid.Column="0"
                     Command="{Binding StartDBInstanceCommand}"
                     Content="起動"
-                    Style="{StaticResource buttonStyle}" />
-
-                <Button
-                    x:Name="AutoStartButton"
-                    Grid.Column="1"
-                    Margin="3,4"
-                    Command="{Binding DisableAutoStartCommand}"
-                    Content="{Binding AutoStartStopButtonText}"
                     Style="{StaticResource buttonStyle}" />
 
             </Grid>

@@ -85,7 +85,6 @@ namespace RDSRemocon.ViewModels
                 new DelegateCommand(() => {
                     cliExecuter.startDBInstance(cliExecuter.getDBInstanceIdentifier());
                     additionCheckTimer.Start();
-                    DisableAutoStartCommand.Execute();
                     updateDBInstanceStatus("start");
                 });
 
@@ -149,15 +148,6 @@ namespace RDSRemocon.ViewModels
         public DelegateCommand StartDBInstanceCommand { get; private set;}
         public DelegateCommand StopDBInstanceCommand { get; private set;}
         public DelegateCommand UpdateDBInstanceStatusCommand { get; private set;}
-
-        private DelegateCommand disableAutoStartCommand;
-        public DelegateCommand DisableAutoStartCommand {
-            get => disableAutoStartCommand ?? (disableAutoStartCommand = new DelegateCommand(() => {
-                autoStartTimer.Stop();
-                AutoStartStopButtonText = "自動起動 OFF";
-            }));
-        }
-
 
         public DelegateCommand<Object> SetAutoStartCommand {
             #region
