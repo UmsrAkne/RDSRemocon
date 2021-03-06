@@ -101,7 +101,6 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <Button
@@ -109,15 +108,11 @@
                     Command="{Binding StopDBInstanceCommand}"
                     Content="停止"
                     Style="{StaticResource buttonStyle}" />
+
                 <StackPanel
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    Orientation="Horizontal">
-
-                    <TextBlock Text="失敗時再試行" />
-                    <CheckBox Margin="3,2,3,0" />
-
-                </StackPanel>
+                    Orientation="Horizontal" />
             </Grid>
 
             <Grid>
