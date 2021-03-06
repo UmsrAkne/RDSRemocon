@@ -134,18 +134,18 @@
                     Orientation="Horizontal">
 
                     <ComboBox Name="TimeSelectComboBox">
-                        <ComboBoxItem Content="30 分後" Tag="25" />
+                        <ComboBoxItem Content="30 分後" Tag="30" />
 
                         <ComboBoxItem
                             Content="60 分後"
                             IsSelected="True"
-                            Tag="55" />
+                            Tag="60" />
 
-                        <ComboBoxItem Content="70 分後" Tag="65" />
-                        <ComboBoxItem Content="80 分後" Tag="75" />
-                        <ComboBoxItem Content="90 分後" Tag="85" />
-                        <ComboBoxItem Content="120 分後" Tag="115" />
-                        <ComboBoxItem Content="180 分後" Tag="175" />
+                        <ComboBoxItem Content="70 分後" Tag="70" />
+                        <ComboBoxItem Content="80 分後" Tag="80" />
+                        <ComboBoxItem Content="90 分後" Tag="90" />
+                        <ComboBoxItem Content="120 分後" Tag="120" />
+                        <ComboBoxItem Content="180 分後" Tag="180" />
                     </ComboBox>
 
                     <TextBlock

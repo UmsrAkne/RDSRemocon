@@ -152,7 +152,8 @@ namespace RDSRemocon.ViewModels
         public DelegateCommand<Object> SetAutoStartCommand {
             #region
             get => setAutoStartCommand ?? (setAutoStartCommand = new DelegateCommand<Object>((Object numberString) => {
-                AutoStartMinutesCounter = int.Parse((String)numberString);
+                int advanceMinutes = 5; // この値の時間分、前倒しでDBインスタンスを起動する。
+                AutoStartMinutesCounter = int.Parse((String)numberString) - advanceMinutes;
                 StopDBInstanceCommand.Execute();
             }));
         }
