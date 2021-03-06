@@ -141,6 +141,8 @@
                             IsSelected="True"
                             Tag="55" />
 
+                        <ComboBoxItem Content="70 分後" Tag="65" />
+                        <ComboBoxItem Content="80 分後" Tag="75" />
                         <ComboBoxItem Content="90 分後" Tag="85" />
                         <ComboBoxItem Content="120 分後" Tag="115" />
                         <ComboBoxItem Content="180 分後" Tag="175" />
